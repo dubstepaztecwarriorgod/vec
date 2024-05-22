@@ -1,13 +1,17 @@
 #include "vec.h" // main lib file
 #include <stdio.h> // printf
+#include <stdlib.h> 
 
 int main() {
-    Vec *vector = vec_init(10);
-    if (vector == NULL) {
+    Vec *vec = vec_init(10);
+    if (vec == NULL) {
         puts("Shits fucked");
     }
-    for (size_t i = 0; i < vector->cap; i++) {
-        printf("%d, ", *(int *)vector->ptr[i]);
-    }
-    vec_print("%d", vector, int);
+    int a = 4;
+    int b = 23;
+    int c = 540;
+    vec_push(vec, &a);
+    vec_push(vec, &b);
+    vec_push(vec, &c);
+    vec_print("%d", vec, int);
 }

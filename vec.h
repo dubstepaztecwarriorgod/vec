@@ -2,10 +2,11 @@
 #define VEC_H
 
 #include <sys/types.h> // size_t
+#include <stdbool.h> // bool
 
+// Macro for printing every element in the vector
 #define vec_print(formatter, vec, type) { \
     for (size_t i = 0; i < (vec)->len; i++) { \
-        puts("made it here"); \
         printf(formatter "\n", *((type *)(vec)->ptr[i])); \
     } \
 }
@@ -29,6 +30,15 @@ Vec *vec_init(size_t cap);
 int vec_grow(Vec *vec);
 
 // Pushes the data into the vec
-void vec_push(Vec *vec, void *data);
+int vec_push(Vec *vec, void *data);
+
+// Gets data at a given index
+void *vec_get(Vec *vec, size_t index);
+
+// Free the vector
+void vec_free(Vec *vec);
+
+// Returns true if the len = 0
+bool vec_is_empty(Vec *vec);
 
 #endif

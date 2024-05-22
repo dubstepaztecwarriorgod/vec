@@ -3,7 +3,6 @@
 #include <stdio.h> // printf
 
 Vec *vec_init(size_t cap) {
-    // Init the vec and allocate the array of pointers
     Vec *vec = malloc(sizeof(Vec));
     if (!vec) 
         return (Vec *)NULL;
@@ -12,37 +11,55 @@ Vec *vec_init(size_t cap) {
     if (!vec->ptr) 
         return (Vec *)NULL;
 
-    // initilize the array
-    for (size_t i = 0; i < cap; i++) {
-        vec->ptr[i] = malloc(sizeof(void *));
-        if (!vec->ptr[i]) 
-            return (Vec *)NULL;
-    }
+    for (size_t i = 0; i < cap; i++) 
+        vec->ptr[i] = NULL;
 
     vec->cap = cap;
     vec->len = 0;
     return vec;
 }
 
-void vec_push(Vec *vec, void *data) {
+int vec_push(Vec *vec, void *data) {
     if (vec->cap == vec->len)
-        vec_grow(vec);
+        if (vec_grow(vec) != 0)
+            return -1;
     
-    vec->ptr[vec->len] = data;
+    vec->ptr[vec->len++] = data;
 
-    vec->len++;
+    return 0;
 }
 
-enum VecErrors vec_grow(Vec *vec) {
-    vec->cap *= 2;
+int vec_grow(Vec *vec) {
+    size_t new_cap = vec->cap * 2;
+    void  **new_ptr = realloc(vec->ptr, vec->cap * sizeof(void *));
 
-    vec->ptr = realloc(vec->ptr, vec->cap * sizeof(void *));
-    if (!vec->ptr) 
+    if (!new_ptr) 
         return -1;
+    
+    vec->cap = new_cap;
+    vec->ptr = new_ptr;
 
-    for (size_t i = vec->len; i < vec->cap; i++) {
-        vec->ptr[i] = malloc(sizeof(void *));
-        if (!vec->ptr[i]) 
-            return -1;
+    for (size_t i = vec->len; i < vec->cap; i++) 
+        vec->ptr[i] = NULL;
+
+    return 0;
+}
+
+void *vec_get(Vec *vec, size_t index) {
+    if (index >= vec->len) 
+        return NULL;
+
+    return vec->ptr[index];
+}
+
+void vec_free(Vec *vec) {
+    for (size_t i = 0; i < vec->len; i++) {
+        free(vec->ptr[i]);
     }
+    free(vec->ptr);
+    free(vec);
+}
+
+bool vec_is_empty(Vec *vec) {
+    return vec->len == 0;
 }
