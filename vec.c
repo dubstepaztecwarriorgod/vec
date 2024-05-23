@@ -50,7 +50,12 @@ void *vec_pop(Vec *vec) {
     if (vec->len == 0)
         return NULL;
 
+    void *data = vec->ptr[vec->len - 1];
+    vec->ptr[vec->len - 1] = NULL;
     
+    vec->len--;
+
+    return data;
 }
 
 void *vec_get(Vec *vec, size_t index) {
