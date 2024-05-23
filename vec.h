@@ -26,9 +26,6 @@ typedef struct Vec {
 // Initilizaize a vector with a initial capacity
 Vec *vec_init(size_t cap);
 
-// Doubles the size of the vector array
-int vec_grow(Vec *vec);
-
 // Pushes the data into the vec
 int vec_push(Vec *vec, void *data);
 
@@ -37,6 +34,12 @@ void *vec_get(Vec *vec, size_t index);
 
 // Free the vector
 void vec_free(Vec *vec);
+
+// Inserts data into the vec at a given index
+int vec_insert(Vec *vec, void *data, size_t index);
+
+// Removes data at a given index
+int vec_remove(Vec *vec, size_t index);
 
 // Returns true if the len = 0
 bool vec_is_empty(Vec *vec);
