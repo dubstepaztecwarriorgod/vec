@@ -41,6 +41,9 @@ int vec_insert(Vec *vec, void *data, size_t index);
 // Removes data at a given index
 int vec_remove(Vec *vec, size_t index);
 
+// Pops the last element on the vec and returns it
+void *vec_pop(Vec *vec);
+
 // Returns true if the len = 0
 bool vec_is_empty(Vec *vec);
 
