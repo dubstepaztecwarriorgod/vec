@@ -20,12 +20,12 @@ Vec *vec_init(size_t cap) {
 }
 
 // Doubles the size of the vec
-int vec_grow(Vec *vec) {
+VecResult vec_grow(Vec *vec) {
     size_t new_cap = vec->cap * 2;
     void  **new_ptr = realloc(vec->ptr, vec->cap * sizeof(void *));
 
     if (!new_ptr) 
-        return -1;
+        return OutOfMemory;
     
     vec->cap = new_cap;
     vec->ptr = new_ptr;
@@ -33,17 +33,17 @@ int vec_grow(Vec *vec) {
     for (size_t i = vec->len; i < vec->cap; i++) 
         vec->ptr[i] = NULL;
 
-    return 0;
+    return Success;
 }
 
-int vec_push(Vec *vec, void *data) {
+VecResult vec_push(Vec *vec, void *data) {
     if (vec->cap == vec->len)
         if (vec_grow(vec) != 0)
-            return -1;
+            return OutOfMemory;
     
     vec->ptr[vec->len++] = data;
 
-    return 0;
+    return Success;
 }
 
 void *vec_pop(Vec *vec) {
@@ -73,13 +73,13 @@ void vec_free(Vec *vec) {
     free(vec);
 }
 
-int vec_insert(Vec *vec, void *data, size_t index) {
+VecResult vec_insert(Vec *vec, void *data, size_t index) {
     if (index > vec->len)
-        return -2;
+        return RangeOutOfBounds;
 
     if (vec->len == vec->cap) 
         if (vec_grow(vec) != 0) 
-            return -1;
+            return OutOfMemory;
 
     memmove(
         &vec->ptr[index + 1],
@@ -90,12 +90,12 @@ int vec_insert(Vec *vec, void *data, size_t index) {
     vec->ptr[index] = data;
     vec->len++;
 
-    return 0;
+    return Success;
 }
 
-int vec_remove(Vec *vec, size_t index) {
+VecResult vec_remove(Vec *vec, size_t index) {
     if (index >= vec->len)
-        return -2;
+        return RangeOutOfBounds;
 
     memmove(
         &vec->ptr[index],
@@ -105,7 +105,7 @@ int vec_remove(Vec *vec, size_t index) {
 
     vec->len--;
 
-    return 0;
+    return Success;
 }
 
 bool vec_is_empty(Vec *vec) {

@@ -1,8 +1,15 @@
 #ifndef VEC_H
 #define VEC_H
 
-#include <sys/types.h> // size_t
+#include <stddef.h> // size_t
 #include <stdbool.h> // bool
+
+// Enum for possible return values
+typedef enum {
+    Success = 0,
+    OutOfMemory = -1,
+    RangeOutOfBounds = -2
+} VecResult;
 
 // Macro for printing every element in the vector
 #define vec_print(formatter, vec, type) { \
@@ -27,7 +34,7 @@ typedef struct Vec {
 Vec *vec_init(size_t cap);
 
 // Pushes the data into the vec
-int vec_push(Vec *vec, void *data);
+VecResult vec_push(Vec *vec, void *data);
 
 // Gets data at a given index
 void *vec_get(Vec *vec, size_t index);
@@ -36,10 +43,10 @@ void *vec_get(Vec *vec, size_t index);
 void vec_free(Vec *vec);
 
 // Inserts data into the vec at a given index
-int vec_insert(Vec *vec, void *data, size_t index);
+VecResult vec_insert(Vec *vec, void *data, size_t index);
 
 // Removes data at a given index
-int vec_remove(Vec *vec, size_t index);
+VecResult vec_remove(Vec *vec, size_t index);
 
 // Pops the last element on the vec and returns it
 void *vec_pop(Vec *vec);
